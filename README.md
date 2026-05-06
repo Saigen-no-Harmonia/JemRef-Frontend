@@ -40,3 +40,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - Node.js v24.13.1
 - Next.js v16.2.4
 - React v19.2.3
+- melta-ui v1.1.0
