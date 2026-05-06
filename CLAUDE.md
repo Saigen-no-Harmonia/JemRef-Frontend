@@ -31,10 +31,43 @@
 
 ## 認証ガード
 
-- `middleware.ts` で未認証ユーザーを `/login` にリダイレクト
-- Route Groupで認証済み／未認証のレイアウトを分離する
-  - `(auth)/` — ログイン・登録ページ
-  - `(app)/` — 認証済みユーザー向けページ（layout.tsxで再検証）
+### 認証方式
+
+- **Firebase Authentication（Google ログインのみ）** をクライアント側で実行し ID トークンを取得する
+- ID トークンは **httpOnly Cookie** にサーバー側で書き込み、クライアント JS からは触らせない
+- すべての認証必須 API 呼び出しは Server Action / Server Component 経由で、`cookies()` から Cookie を読み `Authorization: Bearer <idToken>` で Backend へ転送する
+- Backend は受信した ID トークンを `VerifyIDToken()` で検証し uid を取得 → 業務処理を実行
+
+### 認証ガードの2層構造
+
+| レイヤー | チェック内容 | 失敗時の挙動 | 目的 |
+|---|---|---|---|
+| 1. `middleware.ts`（Edge） | Cookie の **存在** のみ | Cookie なし → `/` にリダイレクト | 未認証アクセスを Backend に届かせない（安価） |
+| 2. Backend 共通認証ミドルウェア | `VerifyIDToken()` + DB 照会 | 403 → Server Action が Cookie 削除 + `/` リダイレクト | 失効・不正トークンを確実に弾く（厳密） |
+
+### ログイン／サインアップ
+
+Google ログインは upsert 型のため、`/login` `/register` ルートは設けない（プロトタイプ方針）。
+
+- トップページ（`/`）に `<GoogleSignInButton>`（Client Component）を配置
+- ボタンクリック → `signInWithPopup(auth, GoogleAuthProvider)` → ID トークン取得 → `loginAction(idToken)` Server Action
+- `loginAction` 内で:
+  1. ID トークンを httpOnly Cookie に Set-Cookie
+  2. `redirect('/references')`
+- 専用のログイン API は持たず、Backend へのユーザー登録は **次の認証付き API 呼び出し時に Backend 共通認証ミドルウェアが lazy に upsert** する（DB に uid なし → INSERT）
+
+### ログアウト
+
+- `<LogoutButton>` クリック → `logoutAction()` Server Action
+- `logoutAction` 内で ID トークン Cookie を削除（`Set-Cookie: max-age=0`）
+- 完了後、Client 側で `signOut(auth)` を呼び Firebase SDK の状態をクリア → `router.push('/')`
+- Firebase ID トークンは JWT のため Backend 側で個別失効できない。Cookie 削除 + `signOut` で実質ログアウトとする（既発行トークンは寿命1時間で自然失効）
+
+### ID トークンのリフレッシュ
+
+- Firebase ID トークンは **1時間で失効**。Firebase SDK が裏で自動更新する
+- Client 側に `onIdTokenChanged` リスナーを置き、新トークンを `/api/session` に POST → Cookie を更新する
+- これによりタブを長時間開いていても Cookie は常に最新の ID トークンを保持する
 
 ---
 
@@ -42,11 +75,14 @@
 
 ```
 /
-├── middleware.ts               # 認証ガード
+├── middleware.ts               # 認証ガード（Cookie存在チェック）
 ├── app/                        # ルーティングのみ担当。ロジックはfeaturesに委譲
-│   ├── (auth)/                 # 未認証ユーザー向け Route Group
-│   │   ├── login/page.tsx
-│   │   └── register/page.tsx
+│   ├── page.tsx                # 未認証ランディング（GoogleSignInButton 配置）
+│   │                           # 認証済みなら /references に redirect
+│   ├── api/
+│   │   └── session/
+│   │       └── route.ts        # POST: idToken → httpOnly Cookie 発行
+│   │                           # DELETE: Cookie 削除
 │   ├── (app)/                  # 認証済みユーザー向け Route Group
 │   │   ├── layout.tsx          # 認証チェック・共通レイアウト
 │   │   └── references/
@@ -57,26 +93,28 @@
 ├── features/                   # Feature単位のモジュール（TCA的な構造）
 │   ├── auth/
 │   │   ├── index.ts            # public API（外部公開するものだけexport）
-│   │   ├── actions.ts          # Server Actions
+│   │   ├── actions.ts          # Server Actions（loginAction / logoutAction）
 │   │   ├── store.ts            # クライアント状態（Zustandなど）
 │   │   ├── types.ts
-│   │   ├── hooks/
-│   │   └── components/
+│   │   ├── hooks/              # onIdTokenChanged 連携など
+│   │   └── components/         # GoogleSignInButton, LogoutButton
 │   └── references/             # 書誌情報（ドメインに応じてfeatureを追加する）
 │       ├── index.ts
-│       ├── actions.ts
+│       ├── actions.ts          # Server Actions（CRUD）
 │       ├── store.ts
 │       ├── types.ts
 │       ├── hooks/
 │       └── components/
 │
 ├── lib/                        # 外部依存・インフラ層
+│   ├── firebase/
+│   │   └── client.ts           # initializeApp(firebaseConfig)（client SDK のみ）
 │   ├── api/
-│   │   ├── client.ts           # fetch wrapper（認証ヘッダー付与）
+│   │   ├── client.ts           # fetch wrapper（cookies() から idToken を読み Bearer 付与）
 │   │   ├── auth.ts
 │   │   └── references.ts
 │   ├── auth/
-│   │   └── session.ts          # セッション取得・検証
+│   │   └── session.ts          # cookies() から idToken を取得するヘルパ
 │   └── utils/
 │
 ├── components/                 # アプリ全体で使う純粋UIコンポーネント
