@@ -49,9 +49,8 @@
 │   │   └── register/page.tsx
 │   ├── (app)/                  # 認証済みユーザー向け Route Group
 │   │   ├── layout.tsx          # 認証チェック・共通レイアウト
-│   │   ├── dashboard/page.tsx
-│   │   └── items/
-│   │       ├── page.tsx
+│   │   └── references/
+│   │       ├── page.tsx        # 書誌情報一覧（ログイン後の初期画面）
 │   │       └── [id]/page.tsx
 │   └── layout.tsx
 │
@@ -63,7 +62,7 @@
 │   │   ├── types.ts
 │   │   ├── hooks/
 │   │   └── components/
-│   └── items/                  # ドメインに応じてfeatureを追加する
+│   └── references/             # 書誌情報（ドメインに応じてfeatureを追加する）
 │       ├── index.ts
 │       ├── actions.ts
 │       ├── store.ts
@@ -75,7 +74,7 @@
 │   ├── api/
 │   │   ├── client.ts           # fetch wrapper（認証ヘッダー付与）
 │   │   ├── auth.ts
-│   │   └── items.ts
+│   │   └── references.ts
 │   ├── auth/
 │   │   └── session.ts          # セッション取得・検証
 │   └── utils/
@@ -96,19 +95,19 @@
 
 ```ts
 // ✅ 正しい参照方法
-import { ItemList } from '@/features/items';
+import { ReferenceList } from '@/features/references';
 
 // ❌ 直接参照は禁止
-import { ItemList } from '@/features/items/components/ItemList';
+import { ReferenceList } from '@/features/references/components/ReferenceList';
 ```
 
 ### `index.ts` は公開APIのみをexportする
 
 ```ts
-// features/items/index.ts
-export { ItemList } from './components/ItemList';
-export { useItems } from './hooks/useItems';
-export type { Item } from './types';
+// features/references/index.ts
+export { ReferenceList } from './components/ReferenceList';
+export { useReferences } from './hooks/useReferences';
+export type { Reference } from './types';
 // actions.ts や store.ts の内部実装は原則exportしない
 ```
 
@@ -119,15 +118,15 @@ export type { Item } from './types';
 `page.tsx` は薄く保ち、「データ取得してFeatureに渡すだけ」に徹する。
 
 ```tsx
-// app/(app)/items/page.tsx
-import { ItemList } from '@/features/items';
+// app/(app)/references/page.tsx
+import { ReferenceList } from '@/features/references';
 import { getServerSession } from '@/lib/auth/session';
-import { getItems } from '@/lib/api/items';
+import { getReferences } from '@/lib/api/references';
 
-export default async function ItemsPage() {
+export default async function ReferencesPage() {
   const session = await getServerSession();
-  const items = await getItems(session.token);
-  return <ItemList initialItems={items} />;
+  const references = await getReferences(session.token);
+  return <ReferenceList initialReferences={references} />;
 }
 ```
 

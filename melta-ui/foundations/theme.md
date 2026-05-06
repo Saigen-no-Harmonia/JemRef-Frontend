@@ -7,28 +7,28 @@
 
 ## Brand
 
-- Primary color: `#2B70EF`（OKLCH再生成 — WCAG AA 4.50:1）
+- Primary color: `#4f46e5`（OKLCH再生成 — WCAG AA 4.50:1）
 - Brand name: （プロジェクトで設定）
 
 ## Primary Palette
 
 ```css
---color-primary-50:  #f0f5ff;
---color-primary-100: #dde8ff;
---color-primary-200: #c0d4ff;
---color-primary-300: #95b6ff;
---color-primary-400: #6492ff;
---color-primary-500: #2b70ef;
---color-primary-600: #2250df;   /* ★ CTA・ボタン・アクティブ状態 */
---color-primary-700: #1a40b5;
---color-primary-800: #13318d;
---color-primary-900: #0e266a;
---color-primary-950: #07194e;
+--color-primary-50:  #eef2ff;
+--color-primary-100: #e0e7ff;
+--color-primary-200: #c7d2fe;
+--color-primary-300: #a5b4fc;
+--color-primary-400: #818cf8;
+--color-primary-500: #4f46e5;
+--color-primary-600: #4338ca;   /* ★ CTA・ボタン・アクティブ状態 */
+--color-primary-700: #3730a3;
+--color-primary-800: #312e81;
+--color-primary-900: #1e1b4b;
+--color-primary-950: #14122d;
 ```
 
 WCAGコントラスト比:
-- 白文字 on primary-500: **4.50:1** — AA準拠
-- primary-500 on 白背景: **4.50:1** — AA準拠
+- 白文字 on primary-500: **7.21:1** — AAA準拠
+- primary-500 on 白背景: **7.21:1** — AAA準拠
 
 ダークモードでの使い分け:
 
@@ -90,17 +90,17 @@ font-mono: "JetBrains Mono", "SF Mono", monospace
 
 ```css
 @theme {
-  --color-primary-50:  #f0f5ff;
-  --color-primary-100: #dde8ff;
-  --color-primary-200: #c0d4ff;
-  --color-primary-300: #95b6ff;
-  --color-primary-400: #6492ff;
-  --color-primary-500: #2b70ef;
-  --color-primary-600: #2250df;
-  --color-primary-700: #1a40b5;
-  --color-primary-800: #13318d;
-  --color-primary-900: #0e266a;
-  --color-primary-950: #07194e;
+  --color-primary-50:  #eef2ff;
+  --color-primary-100: #e0e7ff;
+  --color-primary-200: #c7d2fe;
+  --color-primary-300: #a5b4fc;
+  --color-primary-400: #818cf8;
+  --color-primary-500: #4f46e5;
+  --color-primary-600: #4338ca;
+  --color-primary-700: #3730a3;
+  --color-primary-800: #312e81;
+  --color-primary-900: #1e1b4b;
+  --color-primary-950: #14122d;
 
   /* text-body: 本文デフォルト色（slate-600〜700の中間） */
   --color-body: #3d4b5f;

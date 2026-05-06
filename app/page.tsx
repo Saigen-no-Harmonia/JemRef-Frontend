@@ -1,65 +1,158 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+    <div className="min-h-screen bg-gray-50">
+      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 sm:px-8">
+          <Link href="/" aria-label="JemRef ホーム" className="flex items-center">
             <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+              src="/logo.svg"
+              alt="JemRef"
+              width={120}
+              height={34}
+              priority
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          </Link>
+          <nav className="flex items-center gap-3">
+            <Link
+              href="/login"
+              className="inline-flex h-10 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 text-base font-medium text-slate-700 transition-colors hover:bg-gray-50"
+            >
+              ログイン
+            </Link>
+            <Link
+              href="/register"
+              className="inline-flex h-10 items-center justify-center rounded-lg bg-primary-500 px-4 text-base font-medium text-white transition-colors hover:bg-primary-700"
+            >
+              新規登録
+            </Link>
+          </nav>
         </div>
+      </header>
+
+      <main>
+        <section className="mx-auto max-w-7xl px-6 py-16 sm:px-8 sm:py-24">
+          <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-16">
+            <div className="order-2 md:order-1">
+              <h1 className="text-4xl font-bold leading-tight text-slate-900 sm:text-5xl">
+                和文文献を、
+                <br />
+                はやく、正確に、
+                <br />
+                ストレスなく。
+              </h1>
+              <p className="mt-6 text-lg leading-relaxed text-body">
+                JemRef は和文文献に特化した文献管理サービスです。
+                メモ帳・Excel・Notion より速く、
+                研究のための書誌情報を整理・検索・共有できます。
+              </p>
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <Link
+                  href="/register"
+                  className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-primary-500 px-6 text-base font-medium text-white transition-colors hover:bg-primary-700"
+                >
+                  無料ではじめる
+                </Link>
+                <Link
+                  href="/login"
+                  className="inline-flex h-12 items-center justify-center rounded-lg border border-slate-200 bg-white px-6 text-base font-medium text-slate-700 transition-colors hover:bg-gray-50"
+                >
+                  ログイン
+                </Link>
+              </div>
+            </div>
+            <div className="order-1 md:order-2">
+              <Image
+                src="/top.webp"
+                alt="文献を整理する人々のイラスト"
+                width={640}
+                height={640}
+                priority
+                className="mx-auto h-auto w-full max-w-md md:max-w-none"
+              />
+            </div>
+          </div>
+        </section>
+
+        <section className="border-t border-slate-200 bg-white">
+          <div className="mx-auto max-w-7xl px-6 py-20 sm:px-8">
+            <div className="max-w-2xl">
+              <h2 className="text-2xl font-semibold text-slate-900 sm:text-3xl">
+                JemRef が大切にする 3 つのこと
+              </h2>
+              <p className="mt-3 text-base leading-relaxed text-body">
+                和文研究の現場で、文献管理を本来の研究のための時間に変えるために。
+              </p>
+            </div>
+            <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
+              <article className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="text-sm font-medium text-primary-600">01</div>
+                <h3 className="mt-2 text-lg font-semibold text-slate-900">
+                  和文文献に特化
+                </h3>
+                <p className="mt-3 text-base leading-relaxed text-body">
+                  既存ツールが手薄だった日本語の書誌情報に正面から向き合い、
+                  迷わず登録・検索できる設計にしています。
+                </p>
+              </article>
+              <article className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="text-sm font-medium text-primary-600">02</div>
+                <h3 className="mt-2 text-lg font-semibold text-slate-900">
+                  研究の裾野を広げる
+                </h3>
+                <p className="mt-3 text-base leading-relaxed text-body">
+                  大学契約に依らず、学生もアマチュア研究者も、
+                  本格的な文献管理ツールを使いはじめられます。
+                </p>
+              </article>
+              <article className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="text-sm font-medium text-primary-600">03</div>
+                <h3 className="mt-2 text-lg font-semibold text-slate-900">
+                  良質な文献を共有財産に
+                </h3>
+                <p className="mt-3 text-base leading-relaxed text-body">
+                  専門領域での読書情報の交換を、所属や面識の壁を越えて、
+                  ゆるやかに行えるハブを目指します。
+                </p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section className="border-t border-slate-200">
+          <div className="mx-auto max-w-3xl px-6 py-20 text-center sm:px-8">
+            <h2 className="text-2xl font-semibold text-slate-900 sm:text-3xl">
+              あなたの研究を、文献整理から変える。
+            </h2>
+            <p className="mt-4 text-base leading-relaxed text-body">
+              アカウント登録は数十秒。今すぐ JemRef をはじめましょう。
+            </p>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              <Link
+                href="/register"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-primary-500 px-6 text-base font-medium text-white transition-colors hover:bg-primary-700"
+              >
+                無料ではじめる
+              </Link>
+              <Link
+                href="/login"
+                className="inline-flex h-12 items-center justify-center rounded-lg border border-slate-200 bg-white px-6 text-base font-medium text-slate-700 transition-colors hover:bg-gray-50"
+              >
+                ログイン
+              </Link>
+            </div>
+          </div>
+        </section>
       </main>
+
+      <footer className="border-t border-slate-200 bg-white">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-6 py-8 text-sm text-slate-500 sm:flex-row sm:px-8">
+          <p>© {new Date().getFullYear()} JemRef</p>
+          <p>和文文献に特化した文献管理サービス</p>
+        </div>
+      </footer>
     </div>
   );
 }
