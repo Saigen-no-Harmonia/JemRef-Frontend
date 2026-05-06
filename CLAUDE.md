@@ -53,7 +53,7 @@ Google ログインは upsert 型のため、`/login` `/register` ルートは�
 - ボタンクリック → `signInWithPopup(auth, GoogleAuthProvider)` → ID トークン取得 → `loginAction(idToken)` Server Action
 - `loginAction` 内で:
   1. ID トークンを httpOnly Cookie に Set-Cookie
-  2. `redirect('/references')`
+  2. `redirect('/records')`
 - 専用のログイン API は持たず、Backend へのユーザー登録は **次の認証付き API 呼び出し時に Backend 共通認証ミドルウェアが lazy に upsert** する（DB に uid なし → INSERT）
 
 ### ログアウト
@@ -78,14 +78,14 @@ Google ログインは upsert 型のため、`/login` `/register` ルートは�
 ├── middleware.ts               # 認証ガード（Cookie存在チェック）
 ├── app/                        # ルーティングのみ担当。ロジックはfeaturesに委譲
 │   ├── page.tsx                # 未認証ランディング（GoogleSignInButton 配置）
-│   │                           # 認証済みなら /references に redirect
+│   │                           # 認証済みなら /records に redirect
 │   ├── api/
 │   │   └── session/
 │   │       └── route.ts        # POST: idToken → httpOnly Cookie 発行
 │   │                           # DELETE: Cookie 削除
 │   ├── (app)/                  # 認証済みユーザー向け Route Group
 │   │   ├── layout.tsx          # 認証チェック・共通レイアウト
-│   │   └── references/
+│   │   └── records/
 │   │       ├── page.tsx        # 書誌情報一覧（ログイン後の初期画面）
 │   │       └── [id]/page.tsx
 │   └── layout.tsx
@@ -98,7 +98,7 @@ Google ログインは upsert 型のため、`/login` `/register` ルートは�
 │   │   ├── types.ts
 │   │   ├── hooks/              # onIdTokenChanged 連携など
 │   │   └── components/         # GoogleSignInButton, LogoutButton
-│   └── references/             # 書誌情報（ドメインに応じてfeatureを追加する）
+│   └── records/             # 書誌情報（ドメインに応じてfeatureを追加する）
 │       ├── index.ts
 │       ├── actions.ts          # Server Actions（CRUD）
 │       ├── store.ts
@@ -112,7 +112,7 @@ Google ログインは upsert 型のため、`/login` `/register` ルートは�
 │   ├── api/
 │   │   ├── client.ts           # fetch wrapper（cookies() から idToken を読み Bearer 付与）
 │   │   ├── auth.ts
-│   │   └── references.ts
+│   │   └── records.ts
 │   ├── auth/
 │   │   └── session.ts          # cookies() から idToken を取得するヘルパ
 │   └── utils/
@@ -133,19 +133,19 @@ Google ログインは upsert 型のため、`/login` `/register` ルートは�
 
 ```ts
 // ✅ 正しい参照方法
-import { ReferenceList } from '@/features/references';
+import { RecordList } from '@/features/records';
 
 // ❌ 直接参照は禁止
-import { ReferenceList } from '@/features/references/components/ReferenceList';
+import { RecordList } from '@/features/records/components/RecordList';
 ```
 
 ### `index.ts` は公開APIのみをexportする
 
 ```ts
-// features/references/index.ts
-export { ReferenceList } from './components/ReferenceList';
-export { useReferences } from './hooks/useReferences';
-export type { Reference } from './types';
+// features/records/index.ts
+export { RecordList } from './components/RecordList';
+export { useRecords } from './hooks/useRecords';
+export type { Record } from './types';
 // actions.ts や store.ts の内部実装は原則exportしない
 ```
 
@@ -156,15 +156,15 @@ export type { Reference } from './types';
 `page.tsx` は薄く保ち、「データ取得してFeatureに渡すだけ」に徹する。
 
 ```tsx
-// app/(app)/references/page.tsx
-import { ReferenceList } from '@/features/references';
+// app/(app)/records/page.tsx
+import { RecordList } from '@/features/records';
 import { getServerSession } from '@/lib/auth/session';
-import { getReferences } from '@/lib/api/references';
+import { getRecords } from '@/lib/api/records';
 
-export default async function ReferencesPage() {
+export default async function RecordsPage() {
   const session = await getServerSession();
-  const references = await getReferences(session.token);
-  return <ReferenceList initialReferences={references} />;
+  const records = await getRecords(session.token);
+  return <RecordList initialRecords={records} />;
 }
 ```
 
