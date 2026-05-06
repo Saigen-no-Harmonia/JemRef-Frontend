@@ -1,0 +1,77 @@
+{
+  "$schema": "../schemas/component-contract.schema.json",
+  "id": "alert",
+  "version": "2.0.0",
+  "name": "Alert",
+  "category": "feedback",
+  "intent": "インラインアラート通知。Info / Success / Warning / Error の4タイプ。",
+  "docPath": "components/alert.md",
+  "anatomy": ["container", "icon", "title?", "message", "closeButton?"],
+  "variants": {
+    "info": {
+      "description": "一般的な情報・お知らせ通知",
+      "tokenRefs": {
+        "bg": "color.primary.50",
+        "border": "color.primary.200",
+        "text": "color.primary.800",
+        "radius": "radius.md"
+      },
+      "tailwind": "bg-primary-50 border border-primary-200 text-primary-800 rounded-lg p-4"
+    },
+    "success": {
+      "description": "完了・成功の確認通知",
+      "tokenRefs": {
+        "bg": "color.status.success.subtle-light",
+        "text": "color.status.success.text-light",
+        "radius": "radius.md"
+      },
+      "tailwind": "bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg p-4"
+    },
+    "warning": {
+      "description": "注意喚起の通知",
+      "tokenRefs": {
+        "bg": "color.status.warning.subtle-light",
+        "text": "color.status.warning.text-light",
+        "radius": "radius.md"
+      },
+      "tailwind": "bg-amber-50 border border-amber-200 text-amber-800 rounded-lg p-4"
+    },
+    "error": {
+      "description": "エラー・問題の通知",
+      "tokenRefs": {
+        "bg": "color.status.danger.subtle-light",
+        "text": "color.status.danger.text-light",
+        "radius": "radius.md"
+      },
+      "tailwind": "bg-red-50 border border-red-200 text-red-800 rounded-lg p-4"
+    }
+  },
+  "sizes": {},
+  "states": [
+    "default",
+    "dismissing"
+  ],
+  "a11y": {
+    "role": "alert (error/warning) / status (info/success)",
+    "required": [
+      "aria-live"
+    ],
+    "keyboard": [],
+    "focusRing": "N/A"
+  },
+  "rules": [
+    {
+      "id": "COLOR_ONLY_FORBIDDEN",
+      "severity": "error"
+    },
+    {
+      "id": "AI_NO_CARD_COLOR_BAR_LEFT",
+      "severity": "error"
+    },
+    {
+      "id": "AI_NO_CARD_COLOR_BAR_TOP",
+      "severity": "error"
+    }
+  ],
+  "htmlSample": "<div role=\"alert\" aria-live=\"assertive\" class=\"bg-red-50 border border-red-200 text-red-800 rounded-lg p-4 flex items-start gap-3\"><div><h3 class=\"font-medium\">エラー</h3><p class=\"text-sm mt-1\">もう一度お試しください</p></div></div>"
+}

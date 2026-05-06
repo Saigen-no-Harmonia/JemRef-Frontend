@@ -1,0 +1,73 @@
+{
+  "$schema": "../schemas/component-contract.schema.json",
+  "id": "tooltip",
+  "version": "2.0.0",
+  "name": "Tooltip",
+  "category": "feedback",
+  "intent": "ホバー/フォーカスで表示される補足情報。max-width: 20rem。",
+  "docPath": "components/tooltip.md",
+  "anatomy": ["container", "text"],
+  "variants": {
+    "top": {
+      "description": "上方向に表示（デフォルト）",
+      "tokenRefs": {
+        "bg": "color.semantic.light.text-muted",
+        "text": "color.semantic.light.text-on-accent",
+        "radius": "radius.md",
+        "elevation": "elevation.sm",
+        "z": "zIndex.dropdown"
+      },
+      "tailwind": "absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-600 text-white text-sm rounded-lg shadow-sm px-3 py-2 max-w-xs"
+    },
+    "bottom": {
+      "description": "下方向に表示",
+      "tokenRefs": {
+        "bg": "color.semantic.light.text-muted",
+        "text": "color.semantic.light.text-on-accent",
+        "radius": "radius.md",
+        "elevation": "elevation.sm",
+        "z": "zIndex.dropdown"
+      },
+      "tailwind": "absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-slate-600 text-white text-sm rounded-lg shadow-sm px-3 py-2 max-w-xs"
+    },
+    "left": {
+      "description": "左方向に表示",
+      "tokenRefs": {
+        "bg": "color.semantic.light.text-muted",
+        "text": "color.semantic.light.text-on-accent",
+        "radius": "radius.md",
+        "elevation": "elevation.sm",
+        "z": "zIndex.dropdown"
+      },
+      "tailwind": "absolute right-full top-1/2 -translate-y-1/2 mr-2 bg-slate-600 text-white text-sm rounded-lg shadow-sm px-3 py-2 max-w-xs"
+    },
+    "right": {
+      "description": "右方向に表示",
+      "tokenRefs": {
+        "bg": "color.semantic.light.text-muted",
+        "text": "color.semantic.light.text-on-accent",
+        "radius": "radius.md",
+        "elevation": "elevation.sm",
+        "z": "zIndex.dropdown"
+      },
+      "tailwind": "absolute left-full top-1/2 -translate-y-1/2 ml-2 bg-slate-600 text-white text-sm rounded-lg shadow-sm px-3 py-2 max-w-xs"
+    }
+  },
+  "sizes": {},
+  "states": [
+    "default",
+    "visible",
+    "hidden"
+  ],
+  "a11y": {
+    "role": "tooltip",
+    "required": [
+      "aria-describedby on trigger",
+      "id on tooltip"
+    ],
+    "keyboard": ["Escape"],
+    "focusRing": "N/A"
+  },
+  "rules": [],
+  "htmlSample": "<div class=\"relative inline-block\"><button aria-describedby=\"tip-1\">?</button><div id=\"tip-1\" role=\"tooltip\" class=\"absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-600 text-white text-sm rounded-lg shadow-sm px-3 py-2 max-w-xs\">補足情報</div></div>"
+}

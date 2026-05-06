@@ -1,0 +1,62 @@
+{
+  "$schema": "../schemas/component-contract.schema.json",
+  "id": "divider",
+  "version": "2.0.0",
+  "name": "Divider",
+  "category": "layout",
+  "intent": "セクション間の視覚的区切り。水平 / テキスト付き / 垂直の3パターン。",
+  "docPath": "components/divider.md",
+  "anatomy": ["line", "label?", "container?"],
+  "variants": {
+    "horizontal": {
+      "description": "標準的な水平区切り線",
+      "tokenRefs": {
+        "border": "color.semantic.light.border-default"
+      },
+      "tailwind": "border-t border-slate-200"
+    },
+    "with-text": {
+      "description": "中央にラベルテキスト付きの水平区切り",
+      "tokenRefs": {
+        "border": "color.semantic.light.border-default",
+        "text": "color.semantic.light.text-muted"
+      },
+      "tailwind": "flex items-center gap-4"
+    },
+    "vertical": {
+      "description": "縦方向の区切り線",
+      "tokenRefs": {
+        "border": "color.semantic.light.border-default"
+      },
+      "tailwind": "border-l border-slate-200 self-stretch"
+    }
+  },
+  "sizes": {},
+  "states": [
+    "default"
+  ],
+  "a11y": {
+    "role": "separator",
+    "required": [
+      "role=\"separator\" (non-hr)",
+      "aria-orientation=\"vertical\" (vertical)"
+    ],
+    "keyboard": [],
+    "focusRing": "N/A"
+  },
+  "rules": [
+    {
+      "id": "DIVIDER_NO_DIV_BORDER_B",
+      "severity": "error"
+    },
+    {
+      "id": "DIVIDER_NO_GRAY_100",
+      "severity": "error"
+    },
+    {
+      "id": "DIVIDER_NO_SLATE_400_PLUS",
+      "severity": "warn"
+    }
+  ],
+  "htmlSample": "<hr class=\"border-t border-slate-200 my-6\">"
+}

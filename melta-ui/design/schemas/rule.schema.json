@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "melta UI Rule Registry",
+  "type": "object",
+  "required": ["version", "rules"],
+  "properties": {
+    "version": { "type": "string" },
+    "description": { "type": "string" },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "category", "severity", "description", "detector", "alternative", "contractLint"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]+$",
+            "description": "ルール ID（大文字スネーク）"
+          },
+          "category": {
+            "type": "string",
+            "enum": ["color", "philosophy", "motion", "typography", "spacing", "ai-pattern", "button", "form", "modal", "list", "table", "tag", "divider", "stepper", "datepicker", "skeleton", "accessibility"]
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["error", "warn"]
+          },
+          "description": { "type": "string" },
+          "detector": {
+            "type": "string",
+            "enum": ["tailwind-class", "tailwind-class-prefix", "html-attr", "manual"],
+            "description": "検出方式。manual は自動検出不可"
+          },
+          "pattern": {
+            "type": ["string", "null"],
+            "description": "Tailwind クラスの検出パターン。manual detector の場合 null"
+          },
+          "matchPatterns": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "prefix 検出用の具体的なマッチパターン一覧"
+          },
+          "alternative": { "type": "string" },
+          "contractLint": {
+            "type": "string",
+            "enum": ["enforce", "warn", "skip"],
+            "description": "P1b contract lint での適用方針。enforce=違反検出、warn=警告のみ、skip=対象外（manual/html-attr/文脈依存ルール）"
+          },
+          "requiresContext": {
+            "type": "boolean",
+            "description": "true の場合、ルールは特定の文脈でのみ NG。contract lint からは skip するが、AI には参照させたい"
+          }
+        }
+      }
+    }
+  }
+}
