@@ -1,7 +1,13 @@
-import Image from "next/image";
-import Link from "next/link";
+import Image from "next/image"
+import Link from "next/link"
+import { redirect } from 'next/navigation'
+import { getIDToken } from "@/lib/auth/session"
+import { GoogleLoginButton } from "@/features/auth/components/GoogleLoginButton"
 
-export default function Home() {
+export default async function Home() {
+  const IDToken = await getIDToken()
+  if (IDToken) redirect('/records')
+
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur">
@@ -16,18 +22,9 @@ export default function Home() {
             />
           </Link>
           <nav className="flex items-center gap-3">
-            <Link
-              href="/login"
-              className="inline-flex h-10 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 text-base font-medium text-slate-700 transition-colors hover:bg-gray-50"
-            >
-              ログイン
-            </Link>
-            <Link
-              href="/register"
-              className="inline-flex h-10 items-center justify-center rounded-lg bg-primary-500 px-4 text-base font-medium text-white transition-colors hover:bg-primary-700"
-            >
-              新規登録
-            </Link>
+            <GoogleLoginButton className="inline-flex h-10 items-center justify-center rounded-lg bg-primary-500 px-4 text-base font-medium text-white transition-colors hover:bg-primary-700">
+              Googleで始める
+            </GoogleLoginButton>
           </nav>
         </div>
       </header>
@@ -49,18 +46,9 @@ export default function Home() {
                 研究のための書誌情報を整理・検索・共有できます。
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Link
-                  href="/register"
-                  className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-primary-500 px-6 text-base font-medium text-white transition-colors hover:bg-primary-700"
-                >
-                  無料ではじめる
-                </Link>
-                <Link
-                  href="/login"
-                  className="inline-flex h-12 items-center justify-center rounded-lg border border-slate-200 bg-white px-6 text-base font-medium text-slate-700 transition-colors hover:bg-gray-50"
-                >
-                  ログイン
-                </Link>
+                <GoogleLoginButton className="inline-flex h-10 items-center justify-center rounded-lg bg-primary-500 px-4 text-base font-medium text-white transition-colors hover:bg-primary-700">
+                  Googleで始める
+                </GoogleLoginButton>
               </div>
             </div>
             <div className="order-1 md:order-2">
@@ -130,18 +118,9 @@ export default function Home() {
               アカウント登録は数十秒。今すぐ JemRef をはじめましょう。
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <Link
-                href="/register"
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-primary-500 px-6 text-base font-medium text-white transition-colors hover:bg-primary-700"
-              >
-                無料ではじめる
-              </Link>
-              <Link
-                href="/login"
-                className="inline-flex h-12 items-center justify-center rounded-lg border border-slate-200 bg-white px-6 text-base font-medium text-slate-700 transition-colors hover:bg-gray-50"
-              >
-                ログイン
-              </Link>
+              <GoogleLoginButton className="inline-flex h-10 items-center justify-center rounded-lg bg-primary-500 px-4 text-base font-medium text-white transition-colors hover:bg-primary-700">
+                Googleで始める
+              </GoogleLoginButton>
             </div>
           </div>
         </section>
@@ -154,5 +133,5 @@ export default function Home() {
         </div>
       </footer>
     </div>
-  );
+  )
 }

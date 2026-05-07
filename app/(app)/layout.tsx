@@ -1,8 +1,10 @@
+import { LogoutButton } from "@/features/auth"
+
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div>
       <header>
-        <button>ログアウト</button>
+        <LogoutButton />
       </header>
       <main>
         {children}
