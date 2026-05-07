@@ -1,8 +1,9 @@
 import Image from "next/image"
-import Link from "next/link"
 import { redirect } from 'next/navigation'
 import { getIDToken } from "@/lib/auth/session"
 import { GoogleLoginButton } from "@/features/auth/components/GoogleLoginButton"
+import { SiteHeader } from "@/components/layout/SiteHeader"
+import { SiteFooter } from "@/components/layout/SiteFooter"
 
 export default async function Home() {
   const IDToken = await getIDToken()
@@ -10,24 +11,7 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 sm:px-8">
-          <Link href="/" aria-label="JemRef ホーム" className="flex items-center">
-            <Image
-              src="/logo.svg"
-              alt="JemRef"
-              width={120}
-              height={34}
-              priority
-            />
-          </Link>
-          <nav className="flex items-center gap-3">
-            <GoogleLoginButton className="inline-flex h-10 items-center justify-center rounded-lg bg-primary-500 px-4 text-base font-medium text-white transition-colors hover:bg-primary-700">
-              Googleで始める
-            </GoogleLoginButton>
-          </nav>
-        </div>
-      </header>
+      <SiteHeader />
 
       <main>
         <section className="mx-auto max-w-7xl px-6 py-16 sm:px-8 sm:py-24">
@@ -126,12 +110,7 @@ export default async function Home() {
         </section>
       </main>
 
-      <footer className="border-t border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-6 py-8 text-sm text-slate-500 sm:flex-row sm:px-8">
-          <p>© {new Date().getFullYear()} JemRef</p>
-          <p>和文文献に特化した文献管理サービス</p>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   )
 }
