@@ -24,3 +24,45 @@ body {
   color: var(--color-body);
   font-family: var(--font-sans);
 }
+
+/* Dot Loader（melta-ui skeleton.md 準拠） */
+@keyframes dotWave {
+  0%, 40%, 100% {
+    transform: scaleY(0.4);
+    opacity: 0.5;
+  }
+  20% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.dot-loader {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 34px;
+}
+
+.dot-loader span {
+  width: 9px;
+  height: 17px;
+  background: var(--color-primary-500);
+  border-radius: 3px;
+  animation: dotWave 1.2s infinite ease-in-out;
+}
+
+.dot-loader span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.dot-loader span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot-loader span {
+    animation: none;
+    opacity: 0.6;
+  }
+}
