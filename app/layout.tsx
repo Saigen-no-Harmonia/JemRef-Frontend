@@ -3,6 +3,7 @@ import { Inter, Noto_Sans_JP } from "next/font/google"
 import { FirebaseAuthSync, RedirectResultHandler } from '@/features/auth/'
 import { Header } from './_components/Header'
 import { Footer } from './_components/Footer'
+import NextTopLoader from 'nextjs-toploader'
 import "./globals.css";
 
 const inter = Inter({
@@ -30,6 +31,7 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body className={`${inter.variable} ${notoSansJp.variable} antialiased`}>
+        <NextTopLoader color="#4f46e5" showSpinner={false} />
         <FirebaseAuthSync />
         <RedirectResultHandler />
         <div className="flex min-h-screen flex-col bg-gray-50">

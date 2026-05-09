@@ -1,14 +1,33 @@
 'use client'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { getRedirectResult, getAdditionalUserInfo } from 'firebase/auth'
+import { getRedirectResult, getAdditionalUserInfo, onIdTokenChanged } from 'firebase/auth'
 import { firebaseAuth } from '@/lib/firebase/client'
 import { loginAction, registerAction } from '@/features/auth/actions'
 import { PENDING_AUTH_KEY } from '../constants'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+
+function waitForFirebaseUser(timeoutMs = 5000): Promise<void> {
+  if (firebaseAuth.currentUser) return Promise.resolve()
+  return new Promise((resolve) => {
+    let resolved = false
+    const finish = () => {
+      if (resolved) return
+      resolved = true
+      clearTimeout(timeout)
+      unsub()
+      resolve()
+    }
+    const timeout = setTimeout(finish, timeoutMs)
+    const unsub = onIdTokenChanged(firebaseAuth, (user) => {
+      if (user) finish()
+    })
+  })
+}
 
 export function RedirectResultHandler() {
   const handled = useRef(false)
   const pathname = usePathname()
+  const router = useRouter()
   const [isProcessing, setIsProcessing] = useState(false)
 
   const finishProcessing = useCallback(() => {
@@ -38,15 +57,12 @@ export function RedirectResultHandler() {
 
       try {
         const result = await getRedirectResult(firebaseAuth)
-        console.log('[Redirect] result:', result)
         if (!result) {
-          console.log('[Redirect] result is null — returning')
           finishProcessing()
           return
         }
         IDToken = await result.user.getIdToken()
         isNewUser = getAdditionalUserInfo(result)?.isNewUser ?? false
-        console.log('[Redirect] isNewUser:', isNewUser)
       } catch (error) {
         finishProcessing()
         console.error('リダイレクトエラー', error)
@@ -56,14 +72,24 @@ export function RedirectResultHandler() {
 
       if (isNewUser) {
         const result = await registerAction(IDToken)
-        finishProcessing()
-        // 成功時はredirectが走るのでここに来ない
-        alert('ユーザー登録に失敗しました。もう一度お試しください。')
-        console.error('register failed:', result.reason)
-        return
+        if (!result.ok) {
+          finishProcessing()
+          alert('ユーザー登録に失敗しました。もう一度お試しください。')
+          console.error('register failed:', result.reason)
+          return
+        }
       } else {
-        await loginAction(IDToken)
+        const result = await loginAction(IDToken)
+        if (!result.ok) {
+          finishProcessing()
+          alert('ログインに失敗しました')
+          console.error('login failed:', result.reason)
+          return
+        }
       }
+
+      await waitForFirebaseUser()
+      router.push('/records')
     }
     run()
   }, [])

@@ -1,12 +1,11 @@
 'use server'
-import { redirect } from 'next/navigation'
 import { setIDTokenCookie, clearIDTokenCookie } from '@/lib/auth/session'
-import { registerAPI, loginAPI } from '@/lib/api/auth'
+import { registerAPI, loginAPI, withdrawalAPI } from '@/lib/api/auth'
 
 export type RegisterFailure = { ok: false, reason: 'registration_failed' }
 export type LoginFailure = { ok: false, reason: 'login_failed' }
 
-export async function loginAction(IDToken: string): Promise<LoginFailure> {
+export async function loginAction(IDToken: string): Promise<{ ok: true } | LoginFailure> {
   await setIDTokenCookie(IDToken)
   try {
     await loginAPI()
@@ -14,10 +13,10 @@ export async function loginAction(IDToken: string): Promise<LoginFailure> {
     await clearIDTokenCookie()
     return { ok: false, reason: 'login_failed' }
   }
-  redirect('/records')
+  return { ok: true }
 }
 
-export async function registerAction(IDToken: string): Promise<RegisterFailure> {
+export async function registerAction(IDToken: string): Promise<{ ok: true } | RegisterFailure> {
   await setIDTokenCookie(IDToken)
   try {
     await registerAPI()
@@ -25,9 +24,18 @@ export async function registerAction(IDToken: string): Promise<RegisterFailure> 
     await clearIDTokenCookie()
     return { ok: false, reason: 'registration_failed' }
   }
-  redirect('/records')
+  return { ok: true }
 }
 
 export async function logoutAction() {
+  await clearIDTokenCookie()
+}
+
+export async function withdrawalAction() {
+  try {
+    await withdrawalAPI()
+  } catch (error) {
+    return { ok: false, reason: 'withdrawal_failed' }
+  }
   await clearIDTokenCookie()
 }

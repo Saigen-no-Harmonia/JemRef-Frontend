@@ -2,19 +2,17 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { signOut, onIdTokenChanged, type User as FirebaseUser } from 'firebase/auth'
+import { signOut } from 'firebase/auth'
 import { firebaseAuth } from '@/lib/firebase/client'
 import { logoutAction } from '@/features/auth/actions'
+import { useAuthUser } from '../hooks/useAuthUser'
 
 export function AccountMenu() {
   const router = useRouter()
   const [open, setOpen] = useState(false)
-  const [user, setUser] = useState<FirebaseUser | null>(() => firebaseAuth.currentUser)
+  const authState = useAuthUser()
+  const user = authState.status === 'ready' ? authState.user : null
   const containerRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    return onIdTokenChanged(firebaseAuth, (u) => setUser(u))
-  }, [])
 
   useEffect(() => {
     if (!open) return
@@ -46,7 +44,7 @@ export function AccountMenu() {
     }
   }
 
-  const initial = user?.displayName?.[0] ?? user?.email?.[0]?.toUpperCase() ?? '?'
+  const avatarFallback = user?.displayName?.[0] ?? user?.email?.[0]?.toUpperCase() ?? '?'
 
   return (
     <div ref={containerRef} className="relative">
@@ -70,7 +68,7 @@ export function AccountMenu() {
           />
         ) : (
           <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary-50 text-sm font-medium text-primary-500">
-            {initial}
+            {avatarFallback}
           </div>
         )}
       </button>
