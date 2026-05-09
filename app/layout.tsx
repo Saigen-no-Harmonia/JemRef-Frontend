@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import { Inter, Noto_Sans_JP } from "next/font/google"
 import { FirebaseAuthSync, RedirectResultHandler } from '@/features/auth/'
+import { Header } from './_components/Header'
+import { Footer } from './_components/Footer'
 import "./globals.css";
 
 const inter = Inter({
@@ -30,7 +32,11 @@ export default function RootLayout({
       <body className={`${inter.variable} ${notoSansJp.variable} antialiased`}>
         <FirebaseAuthSync />
         <RedirectResultHandler />
-        {children}
+        <div className="flex min-h-screen flex-col bg-gray-50">
+          <Header />
+          {children}
+          <Footer />
+        </div>
       </body>
     </html>
   )

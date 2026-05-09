@@ -75,20 +75,20 @@ Google ログインは upsert 型のため、`/login` `/register` ルートは�
 
 ```
 /
-├── middleware.ts               # 認証ガード（Cookie存在チェック）
+├── proxy.ts                    # 認証ガード（Cookie存在チェック）
 ├── app/                        # ルーティングのみ担当。ロジックはfeaturesに委譲
-│   ├── page.tsx                # 未認証ランディング（GoogleSignInButton 配置）
-│   │                           # 認証済みなら /records に redirect
+│   ├── _components/            # アプリシェル（Header / Footer）
+│   ├── page.tsx                # 未認証ランディング
 │   ├── api/
 │   │   └── session/
 │   │       └── route.ts        # POST: idToken → httpOnly Cookie 発行
 │   │                           # DELETE: Cookie 削除
 │   ├── (app)/                  # 認証済みユーザー向け Route Group
-│   │   ├── layout.tsx          # 認証チェック・共通レイアウト
+│   │   ├── layout.tsx          # <main flex-1> ラッパー（Header/Footer は root から）
 │   │   └── records/
 │   │       ├── page.tsx        # 書誌情報一覧（ログイン後の初期画面）
 │   │       └── [id]/page.tsx
-│   └── layout.tsx
+│   └── layout.tsx              # root: Header + {children} + Footer + Firebase listener
 │
 ├── features/                   # Feature単位のモジュール（TCA的な構造）
 │   ├── auth/
@@ -98,7 +98,7 @@ Google ログインは upsert 型のため、`/login` `/register` ルートは�
 │   │   ├── types.ts
 │   │   ├── hooks/              # onIdTokenChanged 連携など
 │   │   └── components/         # GoogleSignInButton, LogoutButton
-│   └── records/             # 書誌情報（ドメインに応じてfeatureを追加する）
+│   └── records/             # 書誌情報
 │       ├── index.ts
 │       ├── actions.ts          # Server Actions（CRUD）
 │       ├── store.ts
@@ -118,8 +118,8 @@ Google ログインは upsert 型のため、`/login` `/register` ルートは�
 │   └── utils/
 │
 ├── components/                 # アプリ全体で使う純粋UIコンポーネント
-│   ├── ui/                     # Button, Input など primitive
-│   └── layout/                 # Header, Sidebar など
+│   └── ui/                     # Button, Input など primitive
+co-locate
 │
 └── types/                      # グローバルな型定義
     └── index.ts
