@@ -170,6 +170,15 @@ export default async function RecordsPage() {
 
 ---
 
+## コーディングガイドライン
+
+- 英単語をコード上で略すの禁止。以下は例
+  - ctx -> context
+  - req -> request
+  - curr -> currnt
+
+---
+
 ## 参考：TCA → Next.js の概念マッピング
 
 | TCA (SwiftUI) | Next.js相当 |

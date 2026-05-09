@@ -6,9 +6,11 @@ import { signOut } from 'firebase/auth'
 import { firebaseAuth } from '@/lib/firebase/client'
 import { logoutAction } from '@/features/auth/actions'
 import { useAuthUser } from '../hooks/useAuthUser'
+import { useToast } from '@/components/ui/Toast'
 
 export function AccountMenu() {
   const router = useRouter()
+  const toast = useToast()
   const [open, setOpen] = useState(false)
   const authState = useAuthUser()
   const user = authState.status === 'ready' ? authState.user : null
@@ -40,6 +42,7 @@ export function AccountMenu() {
       await logoutAction()
     } finally {
       try { await signOut(firebaseAuth) } catch {}
+      toast.success('ログアウトしました')
       router.push('/')
     }
   }

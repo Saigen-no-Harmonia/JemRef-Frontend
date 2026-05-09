@@ -4,6 +4,7 @@ import { FirebaseAuthSync, RedirectResultHandler } from '@/features/auth/'
 import { Header } from './_components/Header'
 import { Footer } from './_components/Footer'
 import NextTopLoader from 'nextjs-toploader'
+import { ToastProvider } from '@/components/ui/Toast'
 import "./globals.css";
 
 const inter = Inter({
@@ -32,13 +33,15 @@ export default function RootLayout({
     <html lang="ja">
       <body className={`${inter.variable} ${notoSansJp.variable} antialiased`}>
         <NextTopLoader color="#4f46e5" showSpinner={false} />
-        <FirebaseAuthSync />
-        <RedirectResultHandler />
-        <div className="flex min-h-screen flex-col bg-gray-50">
-          <Header />
-          {children}
-          <Footer />
-        </div>
+        <ToastProvider>
+          <FirebaseAuthSync />
+          <RedirectResultHandler />
+          <div className="flex min-h-screen flex-col bg-gray-50">
+            <Header />
+            {children}
+            <Footer />
+          </div>
+        </ToastProvider>
       </body>
     </html>
   )

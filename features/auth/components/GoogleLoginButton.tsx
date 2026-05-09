@@ -2,6 +2,7 @@
 import { signInWithRedirect, GoogleAuthProvider } from "firebase/auth"
 import { firebaseAuth } from '@/lib/firebase/client'
 import { PENDING_AUTH_KEY } from "../constants"
+import { useToast } from '@/components/ui/Toast'
 
 type Props = {
   className?: string
@@ -9,6 +10,7 @@ type Props = {
 }
 
 export function GoogleLoginButton({ className, children = 'Googleでログイン' }: Props) {
+  const toast = useToast()
   const handleClick = async() => {
     try {
       sessionStorage.setItem(PENDING_AUTH_KEY, '1')
@@ -17,7 +19,7 @@ export function GoogleLoginButton({ className, children = 'Googleでログイン
     } catch (error) {
       sessionStorage.removeItem(PENDING_AUTH_KEY)
       console.error('Googleログイン失敗', error)
-      alert('ログインに失敗しました')
+      toast.error('ログインに失敗しました')
     }
   }
 

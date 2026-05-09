@@ -83,3 +83,35 @@ body {
     opacity: 0.7;
   }
 }
+
+/* Toast Enter（melta-ui toast.md 準拠） */
+@keyframes toastEnter {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.toast-enter {
+  animation: toastEnter 250ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast-enter {
+    animation: none;
+  }
+}
+
+@keyframes toastExit {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(100%); opacity: 0; }
+}
+
+.toast-exit {
+  animation: toastExit 250ms ease-in forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast-exit {
+    animation: none;
+    opacity: 0;
+  }
+}

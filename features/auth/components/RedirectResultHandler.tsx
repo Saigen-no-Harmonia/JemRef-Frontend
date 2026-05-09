@@ -5,6 +5,7 @@ import { firebaseAuth } from '@/lib/firebase/client'
 import { loginAction, registerAction } from '@/features/auth/actions'
 import { PENDING_AUTH_KEY } from '../constants'
 import { usePathname, useRouter } from 'next/navigation'
+import { useToast } from '@/components/ui/Toast'
 
 function waitForFirebaseUser(timeoutMs = 5000): Promise<void> {
   if (firebaseAuth.currentUser) return Promise.resolve()
@@ -28,6 +29,7 @@ export function RedirectResultHandler() {
   const handled = useRef(false)
   const pathname = usePathname()
   const router = useRouter()
+  const toast = useToast()
   const [isProcessing, setIsProcessing] = useState(false)
 
   const finishProcessing = useCallback(() => {
@@ -66,7 +68,7 @@ export function RedirectResultHandler() {
       } catch (error) {
         finishProcessing()
         console.error('リダイレクトエラー', error)
-        alert('ログインに失敗しました')
+        toast.error('ログインに失敗しました')
         return
       }
 
@@ -74,7 +76,7 @@ export function RedirectResultHandler() {
         const result = await registerAction(IDToken)
         if (!result.ok) {
           finishProcessing()
-          alert('ユーザー登録に失敗しました。もう一度お試しください。')
+          toast.error('ユーザー登録に失敗しました。もう一度お試しください。')
           console.error('register failed:', result.reason)
           return
         }
@@ -82,7 +84,7 @@ export function RedirectResultHandler() {
         const result = await loginAction(IDToken)
         if (!result.ok) {
           finishProcessing()
-          alert('ログインに失敗しました')
+          toast.error('ログインに失敗しました')
           console.error('login failed:', result.reason)
           return
         }
@@ -90,6 +92,7 @@ export function RedirectResultHandler() {
 
       await waitForFirebaseUser()
       router.push('/records')
+      toast.success(isNewUser ? 'アカウントを登録しました' : 'ログインしました')
     }
     run()
   }, [])
