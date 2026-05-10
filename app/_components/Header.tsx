@@ -5,8 +5,8 @@ import { GoogleLoginButton } from '@/features/auth/components/GoogleLoginButton'
 import { AccountMenu } from '@/features/auth/components/AccountMenu'
 
 export async function Header() {
-  const idToken = await getIDToken()
-  const isAuthed = !!idToken
+  const IDToken = await getIDToken()
+  const isAuthed = !!IDToken
 
   return (
     <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur">

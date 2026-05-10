@@ -15,11 +15,11 @@ function waitForFirebaseUser(timeoutMs = 5000): Promise<void> {
       if (resolved) return
       resolved = true
       clearTimeout(timeout)
-      unsub()
+      unsubscribe()
       resolve()
     }
     const timeout = setTimeout(finish, timeoutMs)
-    const unsub = onIdTokenChanged(firebaseAuth, (user) => {
+    const unsubscribe = onIdTokenChanged(firebaseAuth, (user) => {
       if (user) finish()
     })
   })

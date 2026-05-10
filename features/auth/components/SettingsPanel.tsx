@@ -66,7 +66,7 @@ export function SettingsPanel() {
             type="button"
             onClick={() => setDeleteDialogOpen(true)}
             aria-haspopup="dialog"
-            className="inline-flex h-9 items-center justify-center rounded-lg bg-red-500 px-4 text-sm font-medium text-white transition-colors hover:bg-red-600"
+            className="inline-flex h-9 items-center justify-center rounded-lg bg-red-500 px-4 text-sm font-medium text-white transition-colors hover:bg-red-600 cursor-pointer"
           >
             退会する
           </button>
