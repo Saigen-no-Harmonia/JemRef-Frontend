@@ -2,36 +2,30 @@
 import { useEffect, useId, useState } from 'react'
 
 type Props = {
-  open: boolean
   onClose: () => void
   email: string | null
   onConfirm: () => void | Promise<void>
 }
 
-export function DeleteAccountDialog({ open, onClose, email, onConfirm }: Props) {
+export function DeleteAccountDialog({ onClose, email, onConfirm }: Props) {
   const titleId = useId()
   const inputId = useId()
   const [confirmInput, setConfirmInput] = useState('')
 
   useEffect(() => {
-    if (open) setConfirmInput('')
-  }, [open])
-
-  useEffect(() => {
     if (!open) return
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
+    const handler = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose()
     }
     document.addEventListener('keydown', handler)
     return () => document.removeEventListener('keydown', handler)
-  }, [open, onClose])
+  }, [onClose])
 
   useEffect(() => {
-    if (!open) return
     const original = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     return () => { document.body.style.overflow = original }
-  }, [open])
+  }, [])
 
   if (!open) return null
 

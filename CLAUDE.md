@@ -90,13 +90,14 @@ Google ログインは upsert 型のため、`/login` `/register` ルートは�
 │   │       └── [id]/page.tsx
 │   └── layout.tsx              # root: Header + {children} + Footer + Firebase listener
 │
-├── features/                   # Feature単位のモジュール（TCA的な構造）
+├── features/                   # Feature単位のモジュール
 │   ├── auth/
 │   │   ├── index.ts            # public API（外部公開するものだけexport）
 │   │   ├── actions.ts          # Server Actions（loginAction / logoutAction）
 │   │   ├── store.ts            # クライアント状態（Zustandなど）
 │   │   ├── types.ts
 │   │   ├── hooks/              # onIdTokenChanged 連携など
+│   │   ├── services/           
 │   │   └── components/         # GoogleSignInButton, LogoutButton
 │   └── records/             # 書誌情報
 │       ├── index.ts
@@ -167,6 +168,13 @@ export default async function RecordsPage() {
   return <RecordList initialRecords={records} />;
 }
 ```
+
+---
+
+## 禁止事項
+
+- 外部ストア(sessionStorage など)の値を React state に同期させない。useSyncExternalStore を使用する
+- props 変化で state リセットは避ける。コンポーネント自体を unmount -> mount し直して state を初期化する
 
 ---
 

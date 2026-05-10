@@ -72,13 +72,14 @@ export function SettingsPanel() {
           </button>
         </div>
       </div>
-
-      <DeleteAccountDialog
-        open={deleteDialogOpen}
+      
+      {deleteDialogOpen && (
+        <DeleteAccountDialog
         onClose={() => setDeleteDialogOpen(false)}
         email={user.email}
         onConfirm={withdrawAccount}
       />
+      )}
     </>
   )
 }

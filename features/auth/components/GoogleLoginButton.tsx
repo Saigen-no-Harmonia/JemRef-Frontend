@@ -1,7 +1,7 @@
 'use client'
 import { signInWithRedirect, GoogleAuthProvider } from "firebase/auth"
 import { firebaseAuth } from '@/lib/firebase/client'
-import { PENDING_AUTH_KEY } from "../constants"
+import { setPendingAuth, clearPendingAuth } from "../services/pendingAuth"
 import { useToast } from '@/components/ui/Toast'
 
 type Props = {
@@ -13,11 +13,11 @@ export function GoogleLoginButton({ className, children = 'Googleでログイン
   const toast = useToast()
   const handleClick = async() => {
     try {
-      sessionStorage.setItem(PENDING_AUTH_KEY, '1')
+      setPendingAuth()
       await signInWithRedirect(firebaseAuth, new GoogleAuthProvider())
       console.log('[Login] this line should never print')
     } catch (error) {
-      sessionStorage.removeItem(PENDING_AUTH_KEY)
+      clearPendingAuth()
       console.error('Googleログイン失敗', error)
       toast.error('ログインに失敗しました')
     }

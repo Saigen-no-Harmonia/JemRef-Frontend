@@ -10,6 +10,7 @@ export async function loginAction(IDToken: string): Promise<{ ok: true } | Login
   try {
     await loginAPI()
   } catch (error) {
+    console.error('loginAction error', error)
     await clearIDTokenCookie()
     return { ok: false, reason: 'login_failed' }
   }
@@ -21,6 +22,7 @@ export async function registerAction(IDToken: string): Promise<{ ok: true } | Re
   try {
     await registerAPI()
   } catch (error) {
+    console.error('registerAction error', error)
     await clearIDTokenCookie()
     return { ok: false, reason: 'registration_failed' }
   }
@@ -35,6 +37,7 @@ export async function withdrawalAction() {
   try {
     await withdrawalAPI()
   } catch (error) {
+    console.error('withdrawalAction error', error)
     return { ok: false, reason: 'withdrawal_failed' }
   }
   await clearIDTokenCookie()

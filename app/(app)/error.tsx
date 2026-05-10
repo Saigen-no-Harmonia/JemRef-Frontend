@@ -43,7 +43,7 @@ export default function AppError({
     return () => {
       cancelled = true
       unsubscribe()
-      NProgress.done
+      NProgress.done()
     }
   }, [error, reset, router])
 

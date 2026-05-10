@@ -1,9 +1,14 @@
 'use client'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useSyncExternalStore } from 'react'
 import { getRedirectResult, getAdditionalUserInfo, onIdTokenChanged } from 'firebase/auth'
 import { firebaseAuth } from '@/lib/firebase/client'
 import { loginAction, registerAction } from '@/features/auth/actions'
-import { PENDING_AUTH_KEY } from '../constants'
+import {
+  clearPendingAuth,
+  getPendingAuthServerSnapshot,
+  getPendingAuthSnapshot,
+  subscribePendingAuth }
+from '../services/pendingAuth'
 import { usePathname, useRouter } from 'next/navigation'
 import { useToast } from '@/components/ui/Toast'
 
@@ -30,24 +35,21 @@ export function RedirectResultHandler() {
   const pathname = usePathname()
   const router = useRouter()
   const toast = useToast()
-  const [isProcessing, setIsProcessing] = useState(false)
+  const isProcessing = useSyncExternalStore(
+    subscribePendingAuth,
+    getPendingAuthSnapshot,
+    getPendingAuthServerSnapshot,
+  )
 
   const finishProcessing = useCallback(() => {
-    sessionStorage.removeItem(PENDING_AUTH_KEY)
-    setIsProcessing(false)
-  }, [])
-
-  useEffect(() => {
-    if (sessionStorage.getItem(PENDING_AUTH_KEY) === '1') {
-      setIsProcessing(true)
-    }
+    clearPendingAuth()
   }, [])
 
   useEffect(() => {
     if (pathname !== '/') {
       finishProcessing()
     }
-  }, [pathname])
+  }, [pathname, finishProcessing])
 
   useEffect(() => {
     if (handled.current) return
@@ -95,7 +97,7 @@ export function RedirectResultHandler() {
       toast.success(isNewUser ? 'アカウントを登録しました' : 'ログインしました')
     }
     run()
-  }, [])
+  }, [finishProcessing, router, toast])
 
   if (!isProcessing) return null
 
