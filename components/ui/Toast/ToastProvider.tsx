@@ -57,7 +57,7 @@ function ToastContainer({ toasts, onDismiss }: {
   return (
     <div
       aria-label="通知"
-      className="fixed top-4 right-4 z-50 flex w-full max-w-sm flex-col gap-3"
+      className="fixed top-20 right-4 z-50 flex w-full max-w-sm flex-col gap-3"
     >
       {toasts.map((toast) => (
         <ToastItem
