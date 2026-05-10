@@ -2,19 +2,16 @@
 import { useEffect } from 'react'
 import { onIdTokenChanged } from 'firebase/auth'
 import { firebaseAuth } from '@/lib/firebase/client'
+import { clearSession, syncSession } from '../services/sessionSync'
 
 export function useFirebaseAuthSync() {
   useEffect(() => {
     return onIdTokenChanged(firebaseAuth, async (user) => {
       if (user) {
         const IDToken = await user.getIdToken()
-        await fetch('/api/session', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ idToken: IDToken }),
-        })
+        await syncSession(IDToken)
       } else {
-        await fetch('/api/session', { method: 'DELETE' })
+        await clearSession
       }
     })
   }, [])

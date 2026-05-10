@@ -179,6 +179,12 @@ export default async function RecordsPage() {
 
 ---
 
+## Claude向けの注意
+
+- このプロジェクトはフロントエンド学習目的でもあるので、なるべくコードの例示に留め、コーディング（写経）自体はユーザーにやらせるようにする
+
+---
+
 ## 参考：TCA → Next.js の概念マッピング
 
 | TCA (SwiftUI) | Next.js相当 |
