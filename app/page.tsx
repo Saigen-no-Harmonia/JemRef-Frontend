@@ -25,7 +25,7 @@ export default async function Home() {
               研究のための書誌情報を整理・検索・共有できます。
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <GoogleLoginButton className="inline-flex h-10 items-center justify-center rounded-lg bg-primary-500 px-4 text-base font-medium text-white transition-colors hover:bg-primary-700">
+              <GoogleLoginButton className="inline-flex h-10 items-center justify-center rounded-lg bg-primary-500 px-4 text-base font-medium text-white transition-colors hover:bg-primary-700 cursor-pointer">
                 Googleで始める
               </GoogleLoginButton>
             </div>

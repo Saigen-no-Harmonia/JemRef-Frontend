@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useId, useState } from 'react'
+import { flushSync } from 'react-dom'
 
 type Props = {
   onClose: () => void
@@ -11,15 +12,16 @@ export function DeleteAccountDialog({ onClose, email, onConfirm }: Props) {
   const titleId = useId()
   const inputId = useId()
   const [confirmInput, setConfirmInput] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
-    if (!open) return
     const handler = (event: KeyboardEvent) => {
+      if (submitting) return
       if (event.key === 'Escape') onClose()
     }
     document.addEventListener('keydown', handler)
     return () => document.removeEventListener('keydown', handler)
-  }, [onClose])
+  }, [onClose, submitting])
 
   useEffect(() => {
     const original = document.body.style.overflow
@@ -27,13 +29,23 @@ export function DeleteAccountDialog({ onClose, email, onConfirm }: Props) {
     return () => { document.body.style.overflow = original }
   }, [])
 
-  if (!open) return null
-
   const canConfirm = !!email && confirmInput === email
 
   const handleConfirm = async () => {
-    if (!canConfirm) return
-    await onConfirm()
+    if (!canConfirm || submitting) return
+    flushSync(() => {
+      setSubmitting(true)
+    })
+    // ペイント完了を待ってから redirect に入る。
+    // double rAF: 1つ目で「次フレーム前」、2つ目で「ペイント済み」を保証。
+    await new Promise<void>((resolve) =>
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+    )
+    try {
+      await onConfirm()
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -43,7 +55,11 @@ export function DeleteAccountDialog({ onClose, email, onConfirm }: Props) {
       aria-labelledby={titleId}
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
     >
-      <div className="fixed inset-0 bg-black/50" onClick={onClose} aria-hidden="true" />
+      <div
+        className="fixed inset-0 bg-black/50"
+        onClick={submitting ? undefined : onClose}
+        aria-hidden="true"
+      />
 
       <div className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-md">
         <h2 id={titleId} className="text-lg font-semibold text-slate-900">
@@ -68,20 +84,22 @@ export function DeleteAccountDialog({ onClose, email, onConfirm }: Props) {
           />
         </div>
 
-        <div className="mt-6 flex justify-end gap-2">
+        <div className="mt-6 flex justify-end gap-3">
           <button
             type="button"
             onClick={onClose}
-            className="inline-flex h-9 items-center justify-center rounded-lg px-4 text-sm font-medium text-body transition-colors hover:bg-gray-100"
+            disabled={submitting}
+            className="inline-flex items-center justify-center gap-2 h-10 px-4 text-[1rem] font-medium text-body rounded-lg hover:bg-gray-100 active:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500/50 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
           >
             キャンセル
           </button>
           <button
             type="button"
             onClick={handleConfirm}
-            disabled={!canConfirm}
-            className="inline-flex h-9 items-center justify-center rounded-lg bg-red-500 px-4 text-sm font-medium text-white transition-colors hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-red-500"
+            disabled={!canConfirm || submitting}
+            className={`inline-flex items-center justify-center gap-2 h-10 px-4 text-[1rem] font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-colors ${submitting ? 'opacity-75 cursor-not-allowed' : 'disabled:cursor-not-allowed disabled:opacity-50'}`}
           >
+            {submitting && <div aria-hidden="true" className="inline-spinner" />}
             退会する
           </button>
         </div>

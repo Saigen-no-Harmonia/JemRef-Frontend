@@ -1,9 +1,10 @@
 'use server'
 import { setIDTokenCookie, clearIDTokenCookie } from '@/lib/auth/session'
-import { registerAPI, loginAPI, withdrawalAPI } from '@/lib/api/auth'
+import { registerAPI, loginAPI, withdrawAPI } from '@/lib/api/auth'
 
 export type RegisterFailure = { ok: false, reason: 'registration_failed' }
 export type LoginFailure = { ok: false, reason: 'login_failed' }
+export type WithdrawFailure = { ok: false, reason: 'withdraw_failed' }
 
 export async function loginAction(IDToken: string): Promise<{ ok: true } | LoginFailure> {
   await setIDTokenCookie(IDToken)
@@ -33,12 +34,13 @@ export async function logoutAction() {
   await clearIDTokenCookie()
 }
 
-export async function withdrawalAction() {
+export async function withdrawAction(): Promise<{ ok: true } | WithdrawFailure> {
   try {
-    await withdrawalAPI()
+    await withdrawAPI()
   } catch (error) {
-    console.error('withdrawalAction error', error)
-    return { ok: false, reason: 'withdrawal_failed' }
+    console.error('withdrawAction error', error)
+    return { ok: false, reason: 'withdraw_failed' }
   }
   await clearIDTokenCookie()
+  return { ok: true }
 }

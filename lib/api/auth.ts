@@ -28,7 +28,7 @@ export async function loginAPI(): Promise<LoginResponse> {
   return LoginResponseSchema.parse(stub)
 }
 
-export async function withdrawalAPI() {
+export async function withdrawAPI() {
   // TODO: API疎通
   return { ok: true }
 }

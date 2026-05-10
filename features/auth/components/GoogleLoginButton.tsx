@@ -1,7 +1,7 @@
 'use client'
 import { signInWithRedirect, GoogleAuthProvider } from "firebase/auth"
 import { firebaseAuth } from '@/lib/firebase/client'
-import { setPendingAuth, clearPendingAuth } from "../services/pendingAuth"
+import { setPendingAuth, clearPendingAuth, PendingAuthKind } from "../services/pendingAuth"
 import { useToast } from '@/components/ui/Toast'
 
 type Props = {
@@ -13,7 +13,7 @@ export function GoogleLoginButton({ className, children = 'Googleでログイン
   const toast = useToast()
   const handleClick = async() => {
     try {
-      setPendingAuth()
+      setPendingAuth(PendingAuthKind.Login)
       await signInWithRedirect(firebaseAuth, new GoogleAuthProvider())
       console.log('[Login] this line should never print')
     } catch (error) {

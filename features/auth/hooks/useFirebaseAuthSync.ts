@@ -11,7 +11,7 @@ export function useFirebaseAuthSync() {
         const IDToken = await user.getIdToken()
         await syncSession(IDToken)
       } else {
-        await clearSession
+        await clearSession()
       }
     })
   }, [])

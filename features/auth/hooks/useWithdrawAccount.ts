@@ -1,27 +1,22 @@
 'use client'
-import { useRouter } from 'next/navigation'
-import { deleteUser } from 'firebase/auth'
-import { FirebaseError } from 'firebase/app'
+import { reauthenticateWithRedirect, GoogleAuthProvider } from 'firebase/auth'
 import { firebaseAuth } from '@/lib/firebase/client'
-import { withdrawalAction } from '@/features/auth/actions'
+import { setPendingAuth, clearPendingAuth, PendingAuthKind } from '../services/pendingAuth'
+import { useToast } from '@/components/ui/Toast'
 
 export function useWithdrawAccount() {
-  const router = useRouter()
+  const toast = useToast()
 
   return async () => {
     const user = firebaseAuth.currentUser
     if (!user) return
+    setPendingAuth(PendingAuthKind.Withdraw)
     try {
-      await deleteUser(user)
-      await withdrawalAction()
+      await reauthenticateWithRedirect(user, new GoogleAuthProvider())
     } catch (error) {
-      if ((error as FirebaseError).code === 'auth/requires-recent-login') {
-        // TODO: 再認証
-        return
-      }
-      // TODO: エラー表示
-      return
+      clearPendingAuth()
+      console.error('reauthenticateWithRedirect failed', error)
+      toast.error('退会に失敗しました。もう一度お試しください')
     }
-    router.push('/')
   }
 }

@@ -171,6 +171,24 @@ export default async function RecordsPage() {
 
 ---
 
+## enum の使用方針
+
+enum は有用な場面とそうでない場面があるので、使い分ける。
+
+### enum が有用な場面
+
+1. 値の集合をモジュール境界で「名前付き」として扱わせたい場合
+2. 値そのものに意味があり、変えたくない場合 (バックエンドの enum と一致させる、DB に書き込む値を固定したい等)
+3. 値を後から差し替える可能性がある場合
+4. runtime に列挙したい場合
+
+### enum が向かない場面
+
+1. 数値 enum (string enum なら問題ない)
+2. const enum: --isolatedModules（Next.js のデフォルト）で使えない / モジュール境界で挙動が割れてしまう
+
+---
+
 ## 禁止事項
 
 - 外部ストア(sessionStorage など)の値を React state に同期させない。useSyncExternalStore を使用する
@@ -190,6 +208,7 @@ export default async function RecordsPage() {
 ## Claude向けの注意
 
 - このプロジェクトはフロントエンド学習目的でもあるので、なるべくコードの例示に留め、コーディング（写経）自体はユーザーにやらせるようにする
+  - ただしユーザーから明確に依頼された場合はこの限りではない
 
 ---
 
